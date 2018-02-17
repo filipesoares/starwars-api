@@ -5,6 +5,7 @@ import static br.com.b2w.starwars.config.Constants.agent;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -30,44 +31,39 @@ public class PlanetService {
 	private RestTemplate client = new RestTemplate();
 	
 	@Autowired
-	private Planet planet;
-	
-	@Autowired
 	private PlanetRepository repository;
 	
 	public List<Planet> list(){
-		// TODO repository.findAll();
-		return null;
+		return repository.findAll();		
 	}
 	
-	public Planet fetchById(Long id) {
-		this.planet = repository.findById(id);
-		this.fetchFilms();
-		return this.planet;
+	public Planet fetch(String id) {
+		return this.fetchFilms(repository.findOne(id));		
 	}
 	
-	public Planet fetchByName(String name) {
-		// TODO repository.findByName(name.trim());
-		return null;
+	public Planet fetchByName(String nome) {
+		return this.fetchFilms(repository.findByNome(nome));
 	}
 	
-	public void createPlanet(Planet planet) {
-		// TODO repository.save(planet);
+	public Planet createPlanet(Planet planet) {
+		return repository.save(planet);
 	}
 	
-	public void delete() {
-		// TODO repository.remove(planet);
+	public void delete(String id) {
+		repository.delete(id);
 	}
 	
-	// Methods of external API
+	// Metodos de API externa
 	
-	private void fetchFilms() {
+	private Planet fetchFilms(Planet planet) {
 		
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", buildHeader());
 		
-		ResponseEntity<Planet_> p = client.exchange(endpoint + this.planet.getId(), HttpMethod.GET, entity, Planet_.class);
+		ResponseEntity<Planet_> p = client.exchange(endpoint + generateRandom(), HttpMethod.GET, entity, Planet_.class);
 		
-		this.planet.setFilmes(p.getBody().getFilms().size());
+		planet.setFilmes(p.getBody().getFilms().size());
+		
+		return planet;
 	}
 	
 	private static HttpHeaders buildHeader() {	
@@ -75,6 +71,10 @@ public class PlanetService {
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		headers.add("user-agent", agent);
 		return headers;		
+	}
+	
+	private static int generateRandom() {
+		return ThreadLocalRandom.current().nextInt(0, 60);
 	}
 	
 }

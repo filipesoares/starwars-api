@@ -2,6 +2,9 @@ package br.com.b2w.starwars.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Size;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,12 +16,16 @@ public class Planet implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Long id;
+	@Id
+	private String id;
 	
+	@Size(min=3, max=30, message="Nome do Planeta com tamanho inválido")
 	private String nome;
 	
+	@Size(min=3, max=20, message="Clima do Planeta com tamanho inválido")
 	private String clima;
 	
+	@Size(min=3, max=20, message="Terreno do Planeta com tamanho inválido")
 	private String terreno;
 	
 	private Integer filmes;
@@ -27,19 +34,17 @@ public class Planet implements Serializable {
 		super();
 	}
 
-	public Planet(Long id, String nome, String clima, String terreno) {
-		super();
-		this.id = id;
+	public Planet(String nome, String clima, String terreno) {
 		this.nome = nome;
 		this.clima = clima;
 		this.terreno = terreno;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
