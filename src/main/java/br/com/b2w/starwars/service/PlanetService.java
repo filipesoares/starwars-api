@@ -52,9 +52,14 @@ public class PlanetService {
 	public void delete(String id) {
 		repository.delete(id);
 	}
-	
-	// Metodos de API externa
-	
+	/**
+	 * Consulta dados de planetas através da API {@linkplain https://swapi.co/api/}
+	 * Foi simulada a consulta através de números randômicos entre 0 e 60, 
+	 * uma vez que o ID de planeta difere nas duas API's
+	 *  
+	 * @param planet Instância de planeta a serem recuperados a quantidade de aparições em filmes
+	 * @return Retorna uma instância de planeta com o atributo filmes preenchido
+	 */
 	private Planet fetchFilms(Planet planet) {
 		
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", buildHeader());
@@ -65,14 +70,19 @@ public class PlanetService {
 		
 		return planet;
 	}
-	
+	/**
+	 * Constrói um Header HTTP padrão com user-agent e accept
+	 * @return
+	 */
 	private static HttpHeaders buildHeader() {	
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		headers.add("user-agent", agent);
 		return headers;		
 	}
-	
+	/**
+	 * @return Número randômico entre 0 e 60
+	 */
 	private static int generateRandom() {
 		return ThreadLocalRandom.current().nextInt(0, 60);
 	}

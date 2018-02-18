@@ -85,7 +85,7 @@ public class PlanetResourceTest {
 	@Test
 	public void fetchTest() throws Exception {
 
-		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/nome/Alderaan").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/search?nome=Alderaan").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(302)).andExpect(content().string(notNullValue()))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Alderaan"));
 		

@@ -2,15 +2,24 @@ package br.com.b2w.starwars.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
+/**
+ * Classe de dominio que representa a entidade Planeta
+ * @author Filipe Oliveira
+ *
+ */
 @Component
+@Document(collection="planets")
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Planet implements Serializable {
 	
@@ -19,15 +28,20 @@ public class Planet implements Serializable {
 	@Id
 	private String id;
 	
+	@NotNull(message="Informe o nome do planeta")
 	@Size(min=3, max=30, message="Nome do Planeta com tamanho inválido")
+	@Indexed
 	private String nome;
 	
+	@NotNull(message="Informe o clima do planeta")
 	@Size(min=3, max=20, message="Clima do Planeta com tamanho inválido")
 	private String clima;
 	
+	@NotNull(message="Informe o terreno do planeta")
 	@Size(min=3, max=20, message="Terreno do Planeta com tamanho inválido")
 	private String terreno;
 	
+	@Transient
 	private Integer filmes;
 
 	public Planet() {

@@ -4,6 +4,8 @@ import static br.com.b2w.starwars.config.Constants.JSON;
 
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -20,6 +23,7 @@ import br.com.b2w.starwars.model.Planet;
 import br.com.b2w.starwars.service.PlanetService;
 /**
  * Recurso responsável pelo processamento das requisições ao path /planets
+ * 
  * @author Filipe Oliveira
  *
  */
@@ -46,8 +50,8 @@ public class PlanetResource {
 		}
 	}
 	
-	@GetMapping(value="/nome/{nome}")
-	public ResponseEntity<Planet> fetchByName(@PathVariable("nome") String nome){
+	@GetMapping(value="/search")
+	public ResponseEntity<Planet> fetchByName(@RequestParam(name="nome", required=false) String nome){
 		try {
 			return new ResponseEntity<Planet>(service.fetchByName(nome), HttpStatus.FOUND);
 		} catch (NullPointerException e) {
@@ -61,6 +65,8 @@ public class PlanetResource {
 	public ResponseEntity<Planet> create(@RequestBody Planet planet, UriComponentsBuilder ucBuilder){
 		try {
 			return new ResponseEntity<Planet>(service.createPlanet(planet), HttpStatus.CREATED);
+		} catch (ConstraintViolationException ex) {
+			return new ResponseEntity<Planet>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			return new ResponseEntity<Planet>(HttpStatus.BAD_GATEWAY);
 		}
