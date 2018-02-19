@@ -81,6 +81,27 @@ public class PlanetResourceTest {
 		});
 
 	}
+	
+	@Test
+	public void addNullTest() throws Exception {
+
+		List<Planet> planets = new ArrayList<Planet>();
+
+		planets.add(new Planet(null, "Temperado", "Montanhoso"));
+		planets.add(new Planet("Tatooine", null, "Deserto"));
+		planets.add(new Planet("Yavin", "Tropical", null));		
+
+		planets.forEach(planet -> {
+			try {
+				mvc.perform(MockMvcRequestBuilders.put("/" + resource).contentType(MediaType.APPLICATION_JSON)
+						.content(json(planet))).andExpect(status().is4xxClientError())
+						.andExpect(content().string(notNullValue()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+	}
 
 	@Test
 	public void fetchTest() throws Exception {

@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.b2w.starwars.model.Planet;
 import br.com.b2w.starwars.service.PlanetService;
+import io.swagger.annotations.ApiOperation;
 /**
  * Recurso responsável pelo processamento das requisições ao path /planets
  * 
@@ -35,11 +36,13 @@ public class PlanetResource {
 	PlanetService service;
 	
 	@GetMapping
+	@ApiOperation(value="Listar Planetas")
 	public ResponseEntity<List<Planet>> list(){
 		return new ResponseEntity<List<Planet>>(service.list(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/{id}")
+	@ApiOperation(value="Consultar por ID")
 	public ResponseEntity<Planet> fetchById(@PathVariable("id") String id){
 		try {
 			return new ResponseEntity<Planet>(service.fetch(id), HttpStatus.FOUND);
@@ -51,6 +54,7 @@ public class PlanetResource {
 	}
 	
 	@GetMapping(value="/search")
+	@ApiOperation(value="Consultar por Nome")
 	public ResponseEntity<Planet> fetchByName(@RequestParam(name="nome", required=false) String nome){
 		try {
 			return new ResponseEntity<Planet>(service.fetchByName(nome), HttpStatus.FOUND);
@@ -62,6 +66,7 @@ public class PlanetResource {
 	}
 	
 	@PutMapping
+	@ApiOperation(value="Criar Novo Planeta")
 	public ResponseEntity<Planet> create(@RequestBody Planet planet, UriComponentsBuilder ucBuilder){
 		try {
 			return new ResponseEntity<Planet>(service.createPlanet(planet), HttpStatus.CREATED);
@@ -74,6 +79,7 @@ public class PlanetResource {
 	}
 	
 	@DeleteMapping(value="/{id}")
+	@ApiOperation(value="Excluir Planeta")
 	public ResponseEntity<Void> remove(@PathVariable("id") String id){
 		try {
 			service.delete(id);

@@ -3,7 +3,6 @@ package br.com.b2w.starwars.model;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -29,16 +28,13 @@ public class Planet implements Serializable {
 	private String id;
 	
 	@NotNull(message="Informe o nome do planeta")
-	@Size(min=3, max=30, message="Nome do Planeta com tamanho inválido")
 	@Indexed
 	private String nome;
 	
 	@NotNull(message="Informe o clima do planeta")
-	@Size(min=3, max=20, message="Clima do Planeta com tamanho inválido")
 	private String clima;
 	
 	@NotNull(message="Informe o terreno do planeta")
-	@Size(min=3, max=20, message="Terreno do Planeta com tamanho inválido")
 	private String terreno;
 	
 	@Transient
