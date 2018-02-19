@@ -1,87 +1,49 @@
-# Project Title
+# Projeto
 
-One Paragraph of project description goes here
+API Rest de planetas do universo Starwars
 
-## Getting Started
+## Iniciando
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+O projeto foi desenvolvido no Eclipse IDE como um projeto gerenciado pelo Maven.
+ 
+Pode ser importado como um projeto Maven existente na IDE.
 
-### Prerequisites
+Ex.: File > Import > Existing Maven Project 
 
-What things you need to install the software and how to install them
+### Pré-requisitos
 
-```
-Give examples
-```
+- [Eclipse IDE](http://help.eclipse.org/oxygen/index.jsp)
+- [Maven](https://maven.apache.org/)
+- [Java 8](https://www.java.com/pt_BR/)
 
-### Installing
+### Instalação
 
-A step by step series of examples that tell you have to get a development env running
+* **mvn install**
 
-Say what the step will be
+Para instalação do projeto basta executar o comando acima através do Eclipse ou CLI
+	
 
-```
-Give the example
-```
+## Testes
 
-And repeat
+Os testes de integração são executados automaticamente ao executar o passo de instalação ou através do JUNIT contido no eclipse. 
 
-```
-until finished
-```
+## Deploy
 
-End with an example of getting some data out of the system or using it for a little demo
+* **mvn clean spring-boot:run**
 
-## Running the tests
+Para deploy do projeto basta executar o comando acima através do Eclipse ou CLI:
 
-Explain how to run the automated tests for this system
+Este comando vai iniciar a API no seguinte endereço: [http://localhost:9090/starwars/api](http://localhost:9090/starwars/api)
 
-### Break down into end to end tests
+A documentação da API pode ser acessada através da seguinte interface: [http://localhost:9090/starwars/api/swagger-ui.html](http://localhost:9090/starwars/api/swagger-ui.html)  
 
-Explain what these tests test and why
+## Arquitetura
 
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+* [SpringBoot](https://docs.spring.io/spring-boot/docs/1.5.3.RELEASE/reference/htmlsingle/)
+* [Maven](https://maven.apache.org/) - Injeção de Dependências
+* [Swagger2](https://swagger.io/docs/) - Documentação da API
+* [MongoDB](https://docs.mongodb.com) - Base de Dados NoSQL
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+* **Filipe Oliveira** - *Development API* - [https://github.com/FilipeSoares](https://github.com/FilipeSoares)

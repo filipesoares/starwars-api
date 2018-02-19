@@ -36,13 +36,13 @@ public class PlanetResource {
 	PlanetService service;
 	
 	@GetMapping
-	@ApiOperation(value="Listar Planetas")
+	@ApiOperation(value="Listar Planetas", httpMethod="GET", response=Planet.class, responseContainer="List", code=200)
 	public ResponseEntity<List<Planet>> list(){
 		return new ResponseEntity<List<Planet>>(service.list(), HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/{id}")
-	@ApiOperation(value="Consultar por ID")
+	@ApiOperation(value="Consultar por ID", httpMethod="GET", response=Planet.class, code=302)
 	public ResponseEntity<Planet> fetchById(@PathVariable("id") String id){
 		try {
 			return new ResponseEntity<Planet>(service.fetch(id), HttpStatus.FOUND);
@@ -54,7 +54,7 @@ public class PlanetResource {
 	}
 	
 	@GetMapping(value="/search")
-	@ApiOperation(value="Consultar por Nome")
+	@ApiOperation(value="Consultar por Nome", httpMethod="GET", response=Planet.class, code=302)
 	public ResponseEntity<Planet> fetchByName(@RequestParam(name="nome", required=false) String nome){
 		try {
 			return new ResponseEntity<Planet>(service.fetchByName(nome), HttpStatus.FOUND);
@@ -66,7 +66,7 @@ public class PlanetResource {
 	}
 	
 	@PutMapping
-	@ApiOperation(value="Criar Novo Planeta")
+	@ApiOperation(value="Criar Novo Planeta", httpMethod="PUT", response=Planet.class, code=201)
 	public ResponseEntity<Planet> create(@RequestBody Planet planet, UriComponentsBuilder ucBuilder){
 		try {
 			return new ResponseEntity<Planet>(service.createPlanet(planet), HttpStatus.CREATED);
@@ -79,7 +79,7 @@ public class PlanetResource {
 	}
 	
 	@DeleteMapping(value="/{id}")
-	@ApiOperation(value="Excluir Planeta")
+	@ApiOperation(value="Excluir Planeta", httpMethod="DELETE", code=200)
 	public ResponseEntity<Void> remove(@PathVariable("id") String id){
 		try {
 			service.delete(id);
