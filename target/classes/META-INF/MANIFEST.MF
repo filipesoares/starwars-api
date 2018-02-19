@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: starwars-api
 Implementation-Version: 1.0.0
-Built-By: filipe
+Built-By: filipe.soares
 Implementation-Vendor-Id: br.com.b2w
-Build-Jdk: 1.8.0_151
+Build-Jdk: 1.8.0_121
 Implementation-URL: http://projects.spring.io/spring-boot/starwars/
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
