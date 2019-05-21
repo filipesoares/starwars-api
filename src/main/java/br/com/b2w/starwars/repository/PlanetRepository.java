@@ -1,4 +1,6 @@
-package br.com.b2w.starwars.dao;
+package br.com.b2w.starwars.repository;
+
+import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +14,8 @@ import br.com.b2w.starwars.model.Planet;
  */
 @Repository
 public interface PlanetRepository extends MongoRepository<Planet, String>{
+
+	List<Planet> findByNomeLike(@Param("nome") String nome);
 
 	Planet findByNome(@Param("nome") String nome);
 	

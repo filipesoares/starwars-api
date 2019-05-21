@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -25,9 +28,10 @@ import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import br.com.b2w.starwars.dao.PlanetRepository;
+import br.com.b2w.starwars.repository.PlanetRepository;
 import br.com.b2w.starwars.model.Planet;
 
 @RunWith(SpringRunner.class)
@@ -37,7 +41,7 @@ import br.com.b2w.starwars.model.Planet;
 public class PlanetResourceTest {
 
 	private static final String resource = "planets";
-	
+
 	@Autowired
 	private MockMvc mvc;
 
@@ -45,7 +49,7 @@ public class PlanetResourceTest {
 	private PlanetRepository repository;
 
 	@SuppressWarnings("rawtypes")
-	private HttpMessageConverter mappingJackson2HttpMessageConverter;	
+	private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
 	@Autowired
 	void setConverters(HttpMessageConverter<?>[] converters) {
@@ -56,12 +60,8 @@ public class PlanetResourceTest {
 		assertNotNull("the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
 	}
 
-	@Test
-	public void addTest() throws Exception {
-
-		// Limpa a base de testes
-		this.repository.deleteAll();
-
+	@Before
+	public void begin() {
 		List<Planet> planets = new ArrayList<Planet>();
 
 		planets.add(new Planet("Alderaan", "Temperado", "Montanhoso"));
@@ -71,25 +71,73 @@ public class PlanetResourceTest {
 		planets.add(new Planet("Dagobah", "Escuro", "Floresta"));
 
 		planets.forEach(planet -> {
-			try {
-				mvc.perform(MockMvcRequestBuilders.put("/" + resource).contentType(MediaType.APPLICATION_JSON)
-						.content(json(planet))).andExpect(status().isCreated())
-						.andExpect(content().string(notNullValue()));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			repository.save(planet);
 		});
+	}
+
+	@After
+	public void end() {
+		repository.deleteAll();
+	}
+
+	@Test
+	public void create() throws Exception {
+
+		mvc.perform(MockMvcRequestBuilders.post("/" + resource).contentType(MediaType.APPLICATION_JSON)
+				.content(json(new Planet("Hoth", "Gelado", "Montanhoso")))).andExpect(status().isCreated())
+				.andExpect(content().string(notNullValue()));
 
 	}
-	
+
 	@Test
+	public void list() throws Exception {
+
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(content().string(notNullValue()));
+
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "?nome=Alderaan").accept(MediaType.APPLICATION_JSON))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(status().isOk())
+				.andExpect(content().string(notNullValue()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].nome").value("Alderaan"));
+
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "?nome=Dagobah").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(content().string(notNullValue()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].nome").value("Dagobah"));
+	}
+
+	@Test
+	public void fetch() throws Exception {
+
+		Planet planet = repository.findByNome("Yavin");
+
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/" + planet.getId()).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk()).andExpect(content().string(notNullValue()))
+		 	.andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Yavin"));
+
+	}
+
+	@Test
+	public void remove() throws Exception {
+
+		Planet planet = repository.findByNome("Yavin");
+
+		mvc.perform(MockMvcRequestBuilders.delete("/" + resource + "/" + planet.getId())
+			.contentType(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().is(204))
+			.andExpect(content().string(equalTo("")));
+	}
+
+	@Test
+	@Ignore
 	public void addNullTest() throws Exception {
 
 		List<Planet> planets = new ArrayList<Planet>();
 
 		planets.add(new Planet(null, "Temperado", "Montanhoso"));
 		planets.add(new Planet("Tatooine", null, "Deserto"));
-		planets.add(new Planet("Yavin", "Tropical", null));		
+		planets.add(new Planet("Yavin", "Tropical", null));
 
 		planets.forEach(planet -> {
 			try {
@@ -104,53 +152,14 @@ public class PlanetResourceTest {
 	}
 
 	@Test
-	public void fetchTest() throws Exception {
-
-		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/search?nome=Alderaan").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(302)).andExpect(content().string(notNullValue()))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Alderaan"));
-		
-	}
-	
-	@Test
-	public void fetchByNameTest() throws Exception {
-
-		Planet dagobah = repository.findByNome("Dagobah");
-		
-		assertNotNull(dagobah);
-		
-		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/" + dagobah.getId()).accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().is(302)).andExpect(content().string(notNullValue()))
-			.andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Dagobah"));
-		
-		
-	}
-	
-	@Test
+	@Ignore
 	public void nonExistsTest() throws Exception {
 
-		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/036").accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().is(404));
-		
-		
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/" + System.currentTimeMillis())
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().is(404));
+
 	}
 
-	@Test
-	public void listTest() throws Exception {
-		
-		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(content().string(notNullValue()));
-	}
-
-	@Test
-	public void removeTest() throws Exception {
-		
-		Planet planetToRemove = repository.findByNome("Yavin");
-
-		mvc.perform(MockMvcRequestBuilders.delete("/" + resource + "/" + planetToRemove.getId()).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(content().string(equalTo("")));
-	}
-	
 	private String json(Object o) throws IOException {
 		try {
 			MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
@@ -160,5 +169,5 @@ public class PlanetResourceTest {
 			throw e;
 		}
 	}
-	
+
 }

@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * Classe de dominio que representa a entidade Planeta
+ * Domain model
+ * 
  * @author Filipe Oliveira
  *
  */
