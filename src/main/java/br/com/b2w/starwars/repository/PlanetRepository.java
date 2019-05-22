@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import br.com.b2w.starwars.model.Planet;
 /**
- * Classe de acesso aos dados persistidos na base Mongo
+ * Repository layer
+ * 
  * @author Filipe Oliveira
  *
  */

@@ -28,10 +28,10 @@ public class SwaggerConfiguration {
 	private ApiInfo apiInfo() {
         return new ApiInfo(
                 "StarWars REST API",
-                "StarWars REST API",
-                "1.0",
+                "API de planetas do universo starwars",
+                "v1",
                 "Terms of service",
-                "",
+                "Filipe Oliveira - <filipesomstd@gmail.com>",
                 "", 
                 "");     
     }

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -69,6 +69,7 @@ public class PlanetResourceTest {
 		planets.add(new Planet("Yavin", "Tropical", "Floresta"));
 		planets.add(new Planet("Hoth", "Gelado", "Montanhoso"));
 		planets.add(new Planet("Dagobah", "Escuro", "Floresta"));
+		planets.add(new Planet("Terra", "Temperado", "Floresta"));
 
 		planets.forEach(planet -> {
 			repository.save(planet);
@@ -83,9 +84,10 @@ public class PlanetResourceTest {
 	@Test
 	public void create() throws Exception {
 
-		mvc.perform(MockMvcRequestBuilders.post("/" + resource).contentType(MediaType.APPLICATION_JSON)
-				.content(json(new Planet("Hoth", "Gelado", "Montanhoso")))).andExpect(status().isCreated())
-				.andExpect(content().string(notNullValue()));
+		mvc.perform(MockMvcRequestBuilders.post("/" + resource).contentType(MediaType.APPLICATION_JSON).content(json(new Planet("Hoth", "Gelado", "Montanhoso"))))
+			.andExpect(status().isCreated())
+			.andExpect(content().string(notNullValue()))
+			.andExpect(header().exists("Location"));
 
 	}
 
@@ -109,11 +111,29 @@ public class PlanetResourceTest {
 	@Test
 	public void fetch() throws Exception {
 
-		Planet planet = repository.findByNome("Yavin");
+		Planet yavin = repository.findByNome("Yavin");
 
-		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/" + planet.getId()).accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk()).andExpect(content().string(notNullValue()))
-		 	.andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Yavin"));
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/" + yavin.getId()).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().string(notNullValue()))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Yavin"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.filmes").value(1));
+
+		Planet dagobah = repository.findByNome("Dagobah");
+
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/" + dagobah.getId()).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().string(notNullValue()))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Dagobah"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.filmes").value(3));
+
+		Planet terra = repository.findByNome("Terra");
+
+		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/" + terra.getId()).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().string(notNullValue()))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Terra"))
+			.andExpect(MockMvcResultMatchers.jsonPath("$.filmes").value(0));
 
 	}
 
@@ -130,7 +150,6 @@ public class PlanetResourceTest {
 	}
 
 	@Test
-	@Ignore
 	public void addNullTest() throws Exception {
 
 		List<Planet> planets = new ArrayList<Planet>();
@@ -152,7 +171,6 @@ public class PlanetResourceTest {
 	}
 
 	@Test
-	@Ignore
 	public void nonExistsTest() throws Exception {
 
 		mvc.perform(MockMvcRequestBuilders.get("/" + resource + "/" + System.currentTimeMillis())
