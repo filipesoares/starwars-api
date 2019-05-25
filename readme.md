@@ -55,6 +55,11 @@ mvn spring-boot:run
 
 ## Authors
 
-* **Filipe Oliveira** - *Developer*  - [filipesomstd@gmail.com](mailto:filipesomstd@gmail.com)<br/>
-[https://github.com/FilipeSoares](https://github.com/FilipeSoares)
-<br/>[https://bitbucket.org/filipe_soares/](https://bitbucket.org/filipe_soares/)
+### Filipe Oliveira
+> GMail => [filipesomstd@gmail.com](mailto:filipesomstd@gmail.com)
+
+> Github => [https://github.com/FilipeSoares](https://github.com/FilipeSoares)
+
+> Bitbucket => [https://bitbucket.org/filipe_soares/](https://bitbucket.org/filipe_soares/)
+
+> LinkedIn => [https://www.linkedin.com/in/filipesoares/](https://www.linkedin.com/in/filipesoares/)
